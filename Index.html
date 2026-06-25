@@ -1,1 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Gerador de Senha Segura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #0b1120 0%, #19233a 100%);
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: rgba(22, 32, 54, 0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 2.5rem;
+            padding: 2.5rem 2.2rem;
+            max-width: 580px;
+            width: 100%;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(120, 180, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: -0.5px;
+            color: #eef5ff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            margin-bottom: 1.8rem;
+        }
+
+        h1 span {
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #b9d0ff;
+            background: rgba(60, 110, 220, 0.25);
+            border: 1px solid rgba(100, 170, 255, 0.2);
+            letter-spacing: 0.3px;
+        }
+
+        .password-display {
+            background: #0f172b;
+            border-radius: 2rem;
+            padding: 0.8rem 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #2a3f6a;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
+            margin-bottom: 2.2rem;
+            transition: border 0.2s;
+        }
+
+        .password-display:focus-within {
+            border-color: #5b8cff;
+            box-shadow: 0 0 0 3px rgba(70, 130, 255, 0.3), inset 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        #passwordOutput {
+            background: transparent;
+            border: none;
+            color: #ebf3ff;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            width: 100%;
+            padding: 0.4rem 0;
+            outline: none;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        #passwordOutput::placeholder {
+            color: #4b5f86;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: #9bbaff;
+            font-size: 1.6rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem 0.2rem 0.8rem;
+            border-radius: 40px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            color: #c2daff;
+            transform: scale(1.05);
+            background: rgba(70, 130, 255, 0.1);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.92);
+            color: #6a9bff;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #c8dcff;
+            letter-spacing: 0.2px;
+            padding: 0 0.2rem;
+        }
+
+        .slider-header span:last-child {
+            background: #1f3152;
+            padding: 0.1rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #b0cbff;
+            border: 1px solid #314a77;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, #2d4d8a, #5b8cff);
+            border-radius: 10px;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #eef5ff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 12px #4a7eff, 0 2px 6px rgba(0, 0, 0, 0.6);
+            border: 2px solid #aac3ff;
+            transition: 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.12);
+            background: #ffffff;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #eef5ff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #aac3ff;
+            box-shadow: 0 0 12px #4a7eff;
+        }
+
+        .checks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem 1.8rem;
+            background: #0e182b;
+            padding: 1.4rem 1.8rem;
+            border-radius: 2rem;
+            border: 1px solid #253a5e;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #d4e3ff;
+            font-size: 0.95rem;
+            font-weight: 450;
+            cursor: pointer;
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4a7eff;
+            transform: scale(1.05);
+            cursor: pointer;
+            filter: drop-shadow(0 0 4px #3a6eff55);
+        }
+
+        .strength-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f1a2e;
+            padding: 0.6rem 1.6rem 0.6rem 1.8rem;
+            border-radius: 3rem;
+            border-left: 5px solid #3f6bcf;
+            margin-top: 0.2rem;
+        }
+
+        .strength-label {
+            font-weight: 500;
+            color: #b3ccff;
+            letter-spacing: 0.3px;
+        }
+
+        #strengthIndicator {
+            font-weight: 600;
+            padding: 0.2rem 1.4rem;
+            border-radius: 30px;
+            background: #1f3152;
+            color: #b6d0ff;
+            border: 1px solid #3a5a8a;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #2a56c6, #1640a0);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            padding: 1rem 1.2rem;
+            border-radius: 3rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 18px rgba(20, 60, 200, 0.4);
+            border: 1px solid #5982ff66;
+            letter-spacing: 0.5px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #3a66e0, #1e4bb8);
+            box-shadow: 0 12px 28px rgba(30, 80, 255, 0.5);
+            border-color: #7a9eff;
+        }
+
+        .generate-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 12px rgba(20, 60, 200, 0.5);
+        }
+
+        .footer-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #4f6e9e;
+            margin-top: 1.5rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid #1d3150;
+        }
+
+        .footer-meta span {
+            background: #13203a;
+            padding: 0.15rem 1rem;
+            border-radius: 30px;
+            border: 1px solid #263f66;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.8rem 1.2rem;
+            }
+            .checks {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+            #passwordOutput {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>
+            🔑 Gerador 
+            <span>seguro</span>
+        </h1>
+
+        <div class="password-display">
+            <input type="text" id="passwordOutput" placeholder="Clique em gerar" readonly>
+            <button class="copy-btn" id="copyBtn" aria-label="Copiar senha">
+                <span>📋</span>
+            </button>
+        </div>
+
+        <div class="options">
+            <div class="slider-container">
+                <div class="slider-header">
+                    <span>🔢 Comprimento</span>
+                    <span id="lengthDisplay">16</span>
+                </div>
+                <input type="range" id="lengthSlider" min="8" max="40" value="16" step="1">
+            </div>
+
+            <div class="checks">
+                <label class="check-item">
+                    <input type="checkbox" id="uppercase" checked> A-Z
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="lowercase" checked> a-z
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="numbers" checked> 0-9
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="symbols" checked> !@#$%
+                </label>
+            </div>
+
+            <div class="strength-badge">
+                <span class="strength-label">🛡️ Força</span>
+                <span id="strengthIndicator">Média</span>
+            </div>
+
+            <button class="generate-btn" id="generateBtn">
+                <span>⚡ Gerar Senha</span>
+            </button>
+        </div>
+
+        <div class="footer-meta">
+            <span>✔️ Boas práticas</span>
+            <span>🔒 256+ combinações</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const passwordOutput = document.getElementById('passwordOutput');
+            const lengthSlider = document.getElementById('lengthSlider');
+            const lengthDisplay = document.getElementById('lengthDisplay');
+            const uppercaseCheck = document.getElementById('uppercase');
+            const lowercaseCheck = document.getElementById('lowercase');
+            const numbersCheck = document.getElementById('numbers');
+            const symbolsCheck = document.getElementById('symbols');
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const strengthIndicator = document.getElementById('strengthIndicator');
+
+            const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const LOWER = 'abcdefghijklmnopqrstuvwxyz';
+            const NUMBERS = '0123456789';
+            const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            function updateLengthDisplay() {
+                lengthDisplay.textContent = lengthSlider.value;
+            }
+
+            function generatePassword() {
+                let chars = '';
+                if (uppercaseCheck.checked) chars += UPPER;
+                if (lowercaseCheck.checked) chars += LOWER;
+                if (numbersCheck.checked) chars += NUMBERS;
+                if (symbolsCheck.checked) chars += SYMBOLS;
+
+                if (chars === '') {
+                    chars = LOWER;
+                    lowercaseCheck.checked = true;
+                }
+
+                const length = parseInt(lengthSlider.value, 10);
+                let password = '';
+
+                const selectedSets = [];
+                if (uppercaseCheck.checked) selectedSets.push(UPPER);
+                if (lowercaseCheck.checked) selectedSets.push(LOWER);
+                if (numbersCheck.checked) selectedSets.push(NUMBERS);
+                if (symbolsCheck.checked) selectedSets.push(SYMBOLS);
+
+                if (selectedSets.length > 0) {
+                    for (let set of selectedSets) {
+                        const randomIndex = Math.floor(Math.random() * set.length);
+                        password += set[randomIndex];
+                    }
+                }
+
+                while (password.length < length) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    password += chars[randomIndex];
+                }
+
+                password = shuffleString(password);
+                
+                if (password.length > length) {
+                    password = password.slice(0, length);
+                }
+
+                return password;
+            }
+
+            function shuffleString(str) {
+                const arr = str.split('');
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr.join('');
+            }
+
+            function calculateStrength(password) {
+                const length = password.length;
+                let hasUpper = /[A-Z]/.test(password);
+                let hasLower = /[a-z]/.test(password);
+                let hasNumber = /[0-9]/.test(password);
+                let hasSymbol = /[^A-Za-z0-9]/.test(password);
+                
+                let typesCount = 0;
+                if (hasUpper) typesCount++;
+                if (hasLower) typesCount++;
+                if (hasNumber) typesCount++;
+                if (hasSymbol) typesCount++;
+
+                if (length >= 16 && typesCount === 4) return '🔒 Forte';
+                if (length >= 12 && typesCount >= 3) return '🟡 Média';
+                if (length >= 8 && typesCount >= 2) return '🟠 Fraca';
+                return '🔴 Muito Fraca';
+            }
+
+            function updateStrength(password) {
+                const strength = calculateStrength(password);
+                strengthIndicator.textContent = strength;
+            }
+
+            function refreshPassword() {
+                const newPassword = generatePassword();
+                passwordOutput.value = newPassword;
+                updateStrength(newPassword);
+            }
+
+            lengthSlider.addEventListener('input', function() {
+                updateLengthDisplay();
+                refreshPassword();
+            });
+
+            const checkboxes = [uppercaseCheck, lowercaseCheck, numbersCheck, symbolsCheck];
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    if (!uppercaseCheck.checked && !lowercaseCheck.checked && !numbersCheck.checked && !symbolsCheck.checked) {
+                        lowercaseCheck.checked = true;
+                    }
+                    refreshPassword();
+                });
+            });
+
+            generateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                refreshPassword();
+                generateBtn.style.transform = 'scale(0.96)';
+                setTimeout(() => generateBtn.style.transform = '', 120);
+            });
+
+            copyBtn.addEventListener('click', function() {
+                const password = passwordOutput.value;
+                if (!password || password === '') {
+                    refreshPassword();
+                    navigator.clipboard?.writeText(passwordOutput.value).catch(() => {});
+                    copyBtn.style.color = '#8effb2';
+                    setTimeout(() => copyBtn.style.color = '', 400);
+                    return;
+                }
+                navigator.clipboard?.writeText(password).then(() => {
+                    copyBtn.style.color = '#8effb2';
+                    setTimeout(() => copyBtn.style.color = '', 400);
+                }).catch(() => {
+                    passwordOutput.select();
+                    document.execCommand('copy');
+                    copyBtn.style.color = '#8effb2';
+                    setTimeout(() => copyBtn.style.color = '', 400);
+                });
+            });
+
+            (function init() {
+                updateLengthDisplay();
+                const initialPassword = generatePassword();
+                passwordOutput.value = initialPassword;
+                updateStrength(initialPassword);
+            })();
+
+            passwordOutput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    refreshPassword();
+                }
+            });
+
+            passwordOutput.addEventListener('click', function() {
+                this.select();
+            });
+
+        })();
+    </script>
+</body>
+</html>
