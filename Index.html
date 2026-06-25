@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Gerador de Senha Segura</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <h1>
+            🔑 Gerador 
+            <span>seguro</span>
+        </h1>
+
+        <!-- Exibição da senha -->
+        <div class="password-display">
+            <input type="text" id="passwordOutput" placeholder="Clique em gerar" readonly>
+            <button class="copy-btn" id="copyBtn" aria-label="Copiar senha">
+                <span>📋</span>
+            </button>
+        </div>
+
+        <!-- Opções de personalização -->
+        <div class="options">
+            <!-- Comprimento -->
+            <div class="slider-container">
+                <div class="slider-header">
+                    <span>🔢 Comprimento</span>
+                    <span id="lengthDisplay">16</span>
+                </div>
+                <input type="range" id="lengthSlider" min="8" max="40" value="16" step="1">
+            </div>
+
+            <!-- Checkboxes: critérios -->
+            <div class="checks">
+                <label class="check-item">
+                    <input type="checkbox" id="uppercase" checked> A-Z
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="lowercase" checked> a-z
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="numbers" checked> 0-9
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="symbols" checked> !@#$%
+                </label>
+            </div>
+
+            <!-- Indicador de força -->
+            <div class="strength-badge">
+                <span class="strength-label">🛡️ Força</span>
+                <span id="strengthIndicator">Média</span>
+            </div>
+
+            <!-- Botão Gerar -->
+            <button class="generate-btn" id="generateBtn">
+                <span>⚡ Gerar Senha</span>
+            </button>
+        </div>
+
+        <div class="footer-meta">
+            <span>✔️ Boas práticas</span>
+            <span>🔒 256+ combinações</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
